@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="form.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Registration Form</h2>
+      <form id="registrationForm" onsubmit="return validateForm()">
+        <label for="fullName">Full Name:</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          minlength="5"
+          required
+        />
+        <span id="fullNameError" class="error"></span><br />
+
+        <label for="email">Email ID:</label>
+        <input type="email" id="email" name="email" required />
+        <span id="emailError" class="error"></span><br />
+
+        <label for="phone">Phone Number:</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          pattern="[0-9]{10}"
+          required
+        />
+        <span id="phoneError" class="error"></span><br />
+
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          minlength="8"
+          required
+        />
+        <span id="passwordError" class="error"></span><br />
+
+        <label for="confirmPassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          minlength="8"
+          required
+        />
+        <span id="confirmPasswordError" class="error"></span><br />
+
+        <input type="submit" value="Submit" id="submitButton" />
+      </form>
+    </div>
+    <script>
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function validateForm() {
+        var fullName = document.getElementById("fullName").value;
+        var email = document.getElementById("email").value;
+        var phone = document.getElementById("phone").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+
+        var fullNameError = document.getElementById("fullNameError");
+        var emailError = document.getElementById("emailError");
+        var phoneError = document.getElementById("phoneError");
+        var passwordError = document.getElementById("passwordError");
+        var confirmPasswordError = document.getElementById(
+          "confirmPasswordError"
+        );
+
+        fullNameError.textContent = "";
+        emailError.textContent = "";
+        phoneError.textContent = "";
+        passwordError.textContent = "";
+        confirmPasswordError.textContent = "";
+
+        var valid = true;
+
+        if (fullName.length < 5) {                            //checking length of the fullname
+          fullNameError.textContent =
+            "Name must be at least 5 characters long.";
+          valid = false;
+        } else if (/^[A-Za-z\s]+$/.test(fullName)) {          //checking if the fullname has numbers or any special characters using regrex
+          fullNameError.textContent = "Name should contain only alphabets.";
+          valid = false;
+        }
+
+        if (!emailPattern.test(email)) {
+          emailError.textContent = "Enter correct email.";      //checking email using regrex where it check (no domain part) (no "@" symbol) (no dot in the domain part) (contains whitespace)
+          valid = false;
+        }
+
+        if (phone === "123456789") {                            //checking phone number it should not be '123456789' and less than 10 and must not contain alphabets
+          phoneError.textContent = "Phone number must not be 123456789.";
+          valid = false;
+        } else if (phone.length !== 10) {
+          phoneError.textContent = "phone number it should not bless than 10.";
+          valid = false;
+        } else if (!/^[6-9][0-9]{9}$/.test(phone)) {
+          phoneError.textContent = "Phone number should contain only numbers.";
+          valid = false;
+        }
+
+        if (password === "password") {
+          passwordError.textContent = "Password cannot be 'password'";
+          valid = false;
+        } else if (password.length < 8) {
+          passwordError.textContent =                                      
+            "Password must be at least 8 characters long";     //checking password it should not be same as 'password'
+            valid = false;
+                                                               //and shouuld atleast 8 characters and should not be equal to fullname
+        } else if (password === fullName) {
+          passwordError.textContent =
+            "Password cannot be the same as your username";
+          valid = false;
+        }
+
+        if (password !== confirmPassword) {
+          confirmPasswordError.textContent = "Passwords do not match.";    //checking password and conform password should be same 
+          valid = false;
+        }
+
+        // Disable the submit button if the form is invalid
+        var submitButton = document.getElementById("submitButton");
+        submitButton.disabled = !valid;
+
+        // Clear error messages if the form is submitted
+        if (valid) {
+          fullNameError.textContent = "";
+          emailError.textContent = "";
+          phoneError.textContent = "";
+          passwordError.textContent = "";
+          confirmPasswordError.textContent = "";
+        }
+
+        return valid;
+      }
+    </script>
+  </body>
+</html>
